@@ -37,7 +37,7 @@
                 <div class="col-12">
                   <h4>
                     <i class="fas fa-globe"></i> AdminToko, Inc.
-                    <small class="float-right">Date: {{ $transaksi->created_at }}</small>
+                    <small class="float-right">Date: {{ $transaksi_id->created_at }}</small>
                   </h4>
                 </div>
                 <!-- /.col -->
@@ -57,18 +57,18 @@
                 <div class="col-sm-4 invoice-col">
                   To
                   <address>
-                    <strong>{{ $transaksi->name }}</strong><br>
-                    {{ $transaksi->detail_lokasi }}<br>
-                    Phone: {{ $transaksi->phone }}<br>
-                    {{-- Email: {{ $transaksi-> }} --}}
+                    <strong>{{ $transaksi_id->name }}</strong><br>
+                    {{ $transaksi_id->detail_lokasi }}<br>
+                    Phone: {{ $transaksi_id->phone }}<br>
+                    {{-- Email: {{ $transaksi_id-> }} --}}
                   </address>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-4 invoice-col">
-                  <b>Invoice #{{ $transaksi->kode_unik }}</b><br>
+                  <b>Invoice #{{ $transaksi_id->kode_unik }}</b><br>
                   <br>
                   <b>Order ID:</b> 4F3S8J<br>
-                  <b>Payment Due:</b> {{ $transaksi->kode_payment }}<br>
+                  <b>Payment Due:</b> {{ $transaksi_id->kode_payment }}<br>
                   <b>Account:</b> 968-34567
                 </div>
                 <!-- /.col -->
@@ -90,18 +90,18 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {{-- @foreach ($detail_transaksi as $no => $detail) --}}
+                    @foreach ($detail_transaksi as $detail)
                     <tr>
-                      <td>{{ $detail_transaksi->total_item }}</td>
+                      <td>{{ $detail->total_item }}</td>
                       <td>
-                        <img src="{{ asset('storage/produk/'.$detail_transaksi->produk->image)  }}" alt="" class="img-thumbnail" >
+                        <img src="{{ asset('storage/produk/'.$detail->produk->image)  }}" alt="" class="img-thumbnail" >
                       </td>
-                      <td>{{ $detail_transaksi->produk->name }}</td>
-                      <td>{{ $detail_transaksi->transaksi->kode_unik}}</td>
-                      <td>{{ $detail_transaksi->catatan}}</td>
-                      <td>Rp.{{ number_format($detail_transaksi->total_harga) }}</td>
+                      <td>{{ $detail->produk->name }}</td>
+                      <td>{{ $detail->transaksi->kode_unik}}</td>
+                      <td>{{ $detail->catatan}}</td>
+                      <td>Rp.{{ number_format($detail->total_harga) }}</td>
                     </tr>
-                    {{-- @endforeach --}}
+                    @endforeach
                   </table>
                 </div>
                 <!-- /.col -->
@@ -118,27 +118,27 @@
                   <img src="{{ asset('dist/img/credit/paypal2.png') }}" alt="Paypal">
 
                   <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                    {{ $transaksi->bank }} <br>
-                    <img src="{{ asset('storage/transfer/'.$transaksi->bukti_transfer) }}" alt="" width="40%" class="img-thumbnail">
+                    {{ $transaksi_id->bank }} <br>
+                    <img src="{{ asset('storage/transfer/'.$transaksi_id->bukti_transfer) }}" alt="" width="40%" class="img-thumbnail">
                   </p>
                 </div>
                 <!-- /.col -->
                 <div class="col-6">
-                  <p class="lead">Amount Due {{ $transaksi->updated_at }}</p>
+                  <p class="lead">Amount Due {{ $transaksi_id->updated_at }}</p>
 
                   <div class="table-responsive">
                     <table class="table">
                       <tr>
                         <th style="width:50%">Harga Barang:</th>
-                        <td>Rp.{{ number_format($transaksi->total_harga) }}</td>
+                        <td>Rp.{{ number_format($transaksi_id->total_harga) }}</td>
                       </tr>
                       <tr>
                         <th>Ongkir</th>
-                        <td>Rp.{{ number_format($transaksi->ongkir) }}</td>
+                        <td>Rp.{{ number_format($transaksi_id->ongkir) }}</td>
                       </tr>
                       <tr>
                         <th>Total:</th>
-                        <td>Rp.{{ number_format($transaksi->total_transfer) }}</td>
+                        <td>Rp.{{ number_format($transaksi_id->total_transfer) }}</td>
                       </tr>
                     </table>
                   </div>
@@ -148,7 +148,7 @@
               <!-- /.row -->
 
               <!-- this row will not appear when printing -->
-              <div class="row no-print">
+              {{--  <div class="row no-print">
                 <div class="col-12">
                   <a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
                   <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Submit
@@ -158,7 +158,7 @@
                     <i class="fas fa-download"></i> Generate PDF
                   </button>
                 </div>
-              </div>
+              </div>  --}}
             </div>
             <!-- /.invoice -->
           </div><!-- /.col -->

@@ -10,18 +10,18 @@ use App\Transaksi;
 
 class UserController extends Controller
 {
-    
+
     public function __construct()
     {
         $this->middleware('auth');
     }
-    
+
     public function index()
     {
         $user = User::where('user_id', 'user')->get();
         $id =  Auth::user()->id;
         $register = User::where('user_id', 'user')->count();
-        $transaksi = Transaksi::where('user_id', $id)->count();
+        $transaksi = Transaksi::where('toko_id', $id)->count();
         $user->makeHidden('user_id');
         return view('user', compact('user', 'register', 'transaksi'));
     }
@@ -44,7 +44,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        
     }
 
     public function show($id)

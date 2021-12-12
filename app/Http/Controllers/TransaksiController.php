@@ -16,69 +16,72 @@ class TransaksiController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index()
     {
         $id =  Auth::user()->id;
         $user_id =  Auth::user()->user_id;
         $register = User::where('user_id', 'user')->count();
-        $transaksi = Transaksi::where('user_id', $id)->count();
-        
+        $transaksi = Transaksi::where('toko_id', $id)->count();
+
         $transaksiMenunggu = Transaksi::with('user')->where('toko_id', $id)->whereStatus("MENUNGGU")->orderBy('id', 'desc')->get();
-        $transaksiSelesai = Transaksi::where('toko_id', $id)->where('status','NOT LIKE',"%MENUNGGU%")->orderBy('id', 'desc')->get();
-        return view('transaksi', compact('transaksiMenunggu','transaksiSelesai', 'register', 'transaksi'));
+        $transaksiSelesai = Transaksi::where('toko_id', $id)->where('status', 'NOT LIKE', "%MENUNGGU%")->orderBy('id', 'desc')->get();
+        return view('transaksi', compact('transaksiMenunggu', 'transaksiSelesai', 'register', 'transaksi'));
     }
 
     public function batal($id)
     {
         $transaksi  = Transaksi::where('id', $id)->first();
-        $this->pushNotif("Transaksi dibatalkan", "Transaksi produk ".$transaksi->details[0]->produk->name.", telah dibatalkan",  $transaksi->user->fcm);
+        $this->pushNotif("Transaksi dibatalkan", "Transaksi produk " . $transaksi->details[0]->produk->name . ", telah dibatalkan",  $transaksi->user->fcm);
         $transaksi->update([
-                'status' => "BATAL"
-            ]);
+            'status' => "BATAL"
+        ]);
         return redirect()->back();
     }
 
     public function proses($id)
     {
         $transaksi  = Transaksi::with(['details.produk'])->where('id', $id)->first();
-        $this->pushNotif("Transaksi sedang diproses", "Transaksi produk ".$transaksi->details[0]->produk->name.", telah diproses",  $transaksi->user->fcm);
+        $this->pushNotif("Transaksi sedang diproses", "Transaksi produk " . $transaksi->details[0]->produk->name . ", telah diproses",  $transaksi->user->fcm);
         $transaksi->update([
-                'status' => "PROSES"
-            ]);
+            'status' => "PROSES"
+        ]);
         return redirect()->back();
     }
 
     public function kirim($id)
     {
         $transaksi  = Transaksi::with(['details.produk'])->where('id', $id)->first();
-        $this->pushNotif("Proses Pengiriman", "Transaksi produk ".$transaksi->details[0]->produk->name.", sedang dalam pengiriman",  $transaksi->user->fcm);
+        $this->pushNotif("Proses Pengiriman", "Transaksi produk " . $transaksi->details[0]->produk->name . ", sedang dalam pengiriman",  $transaksi->user->fcm);
         $transaksi->update([
-                'status' => "DIKIRIM"
-            ]);
+            'status' => "DIKIRIM"
+        ]);
         return redirect()->back();
     }
 
     public function selesai($id)
     {
         $transaksi  = Transaksi::with(['details.produk'])->where('id', $id)->first();
-        $this->pushNotif("Transaksi selesai", "Transaksi produk ".$transaksi->details[0]->produk->name.", telah diterima",  $transaksi->user->fcm);
+        $this->pushNotif("Transaksi selesai", "Transaksi produk " . $transaksi->details[0]->produk->name . ", telah diterima",  $transaksi->user->fcm);
         $transaksi->update([
-                'status' => "SELESAI"
-            ]);
+            'status' => "SELESAI"
+        ]);
         return redirect()->back();
     }
 
-    
+
     public function detail($id)
     {
-        $transaksi  = Transaksi::find($id);
-        $detail_transaksi = TransaksiDetail::with('produk')->where('transaksi_id', $id)->first();
-        return view('detailtransfer', compact('transaksi','detail_transaksi'));
+        $id_user =  Auth::user()->id;
+        $register = User::where('user_id', 'user')->count();
+        $transaksi = Transaksi::where('toko_id', $id_user)->count();
+        $transaksi_id  = Transaksi::find($id);
+        $detail_transaksi = TransaksiDetail::where('transaksi_id', $id)->with('produk')->get();
+        return view('detailtransfer', compact('transaksi', 'detail_transaksi', 'transaksi_id', 'register'));
     }
 
-    
-    public function pushNotif($title, $message, $mfcm) {
+    public function pushNotif($title, $message, $mfcm)
+    {
 
         $mData = [
             'title' => $title,
@@ -120,6 +123,4 @@ class TransaksiController extends Controller
         ];
         return $data;
     }
-
-
 }

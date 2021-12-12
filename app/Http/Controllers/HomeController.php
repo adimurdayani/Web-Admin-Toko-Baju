@@ -30,12 +30,12 @@ class HomeController extends Controller
     public function index()
     {
         $id =  Auth::user()->id;
-        
+
+        $visitor = User::find($id)->increment('views');
         $produk = Produk::where('user_id', $id)->count();
-        $produktotal = Produk::where('user_id', $id)->sum('views');
 
         $register = User::where('user_id', 'user')->count();
-        $transaksi = Transaksi::where('user_id', $id)->count();
+        $transaksi = Transaksi::where('toko_id', $id)->count();
 
         $kategoriAll = KategoriModel::all();
         $produkAll = Produk::all();
@@ -43,9 +43,9 @@ class HomeController extends Controller
         $data = [];
         foreach ($kategoriAll as $get) {
             $kategori[] = $get->nama_kategori;
-            $data[] = $produkAll->where('kategori_id', $get->id)->count();
+            $data[] = $produkAll->where('kategori_id', $get->id)->where('user_id', $id)->count();
         }
 
-        return view('home', compact('produk','register','transaksi', 'produktotal', 'kategori', 'data'));
+        return view('home', compact('produk', 'register', 'transaksi', 'kategori', 'data', 'visitor'));
     }
 }

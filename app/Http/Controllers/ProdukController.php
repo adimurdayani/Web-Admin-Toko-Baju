@@ -16,13 +16,13 @@ class ProdukController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index()
     {
         $id =  Auth::user()->id;
 
         $register = User::where('user_id', 'user')->count();
-        $transaksi = Transaksi::where('user_id', $id)->count();
+        $transaksi = Transaksi::where('toko_id', $id)->count();
 
         $produk = Produk::with(['user'])->where('user_id', $id)->get();
         return view('produk', compact('produk', 'register', 'transaksi'));
@@ -52,12 +52,12 @@ class ProdukController extends Controller
 
         $file = '';
         if ($request->image->getClientOriginalName()) {
-            $file = str_replace(' ', '',$request->image->getClientOriginalName());
-            $fileName  = date('mYdHs').rand(1,999).'-'.$file;
+            $file = str_replace(' ', '', $request->image->getClientOriginalName());
+            $fileName  = date('mYdHs') . rand(1, 999) . '-' . $file;
             $request->image->storeAs('public/produk', $fileName);
         }
         Produk::create(array_merge($request->all(), [
-            'image' =>$fileName
+            'image' => $fileName
         ]));
         notify()->success('Produk berhail ditambahkan!');
         return redirect()->back();
@@ -65,7 +65,6 @@ class ProdukController extends Controller
 
     public function show($id)
     {
-        
     }
 
     public function edit($id)
@@ -78,18 +77,18 @@ class ProdukController extends Controller
         $this->_validasi($request);
         $file = '';
         if ($request->image->getClientOriginalName()) {
-            $file = str_replace(' ', '',$request->image->getClientOriginalName());
-            $fileName  = date('mYdHs').rand(1,999).'-'.$file;
+            $file = str_replace(' ', '', $request->image->getClientOriginalName());
+            $fileName  = date('mYdHs') . rand(1, 999) . '-' . $file;
             $request->image->storeAs('public/produk', $fileName);
         }
         $data = array(
-            'name' => $request->get('name'), 
-            'harga' => $request->get('harga'), 
+            'name' => $request->get('name'),
+            'harga' => $request->get('harga'),
             'deskripsi' => $request->get('deskripsi'),
-            'kategori_id' => $request->get('kategori_id'), 
-            'image'=> $fileName, 
-            'stok' => $request->get('stok'), 
-            'berat' => $request->get('berat'), 
+            'kategori_id' => $request->get('kategori_id'),
+            'image' => $fileName,
+            'stok' => $request->get('stok'),
+            'berat' => $request->get('berat'),
             'user_id' => $request->get('user_id')
         );
         Produk::where('id', $id)->update($data);

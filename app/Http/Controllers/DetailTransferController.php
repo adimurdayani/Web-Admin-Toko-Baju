@@ -13,13 +13,13 @@ class DetailTransferController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index()
     {
-        
+
         $id =  Auth::user()->id;
         $register = User::where('user_id', 'user')->count();
-        $transaksi = Transaksi::where('user_id', $id)->count();
+        $transaksi = Transaksi::where('toko_id', $id)->count();
         return view('detailtransfer', compact('register', 'transaksi'));
     }
 

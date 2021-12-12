@@ -19,8 +19,8 @@ class ProfileController extends Controller
     {
         $id =  Auth::user()->id;
         $register = User::where('user_id', 'user')->count();
-        $transaksi = Transaksi::where('user_id', $id)->count();
-        return view('profile', compact('register','transaksi'));
+        $transaksi = Transaksi::where('toko_id', $id)->count();
+        return view('profile', compact('register', 'transaksi'));
     }
 
     public function create()
@@ -48,10 +48,10 @@ class ProfileController extends Controller
     public function update(Request $request, $id)
     {
         $data = array(
-            'name' => $request->get('name'), 
-            'email' => $request->get('email'), 
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
             'phone' => $request->get('phone'),
-            'alamat' => $request->get('alamat'), 
+            'alamat' => $request->get('alamat'),
             'nama_toko' => $request->get('nama_toko')
         );
         User::where('id', $id)->update($data);

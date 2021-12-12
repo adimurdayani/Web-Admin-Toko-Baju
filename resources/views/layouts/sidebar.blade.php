@@ -61,12 +61,22 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+              @if(Auth::user()->user_id != "admin")
+              <li class="nav-item" hidden>
+                <a href="{{ route('daftartoko') }}" class="nav-link @if (Request::segment(1) == 'daftartoko') active @endif">
+                  <i class="fas fa-shopping-basket nav-icon"></i>
+                  <p>Toko</p>
+                </a>
+              </li>
+              @else
               <li class="nav-item">
                 <a href="{{ route('daftartoko') }}" class="nav-link @if (Request::segment(1) == 'daftartoko') active @endif">
                   <i class="fas fa-shopping-basket nav-icon"></i>
                   <p>Toko</p>
                 </a>
               </li>
+              @endif
+              
               <li class="nav-item">
                 <a href="{{ route('user.index') }}" class="nav-link @if (Request::segment(1) == 'user') active @endif">
                   <i class="fas fa-users-cog nav-icon"></i>

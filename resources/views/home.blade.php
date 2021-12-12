@@ -75,7 +75,7 @@
             <div class="small-box bg-danger">
               <div class="inner">
 
-                <h3>{{ $produktotal }}</h3>
+                <h3>{{ $visitor }}</h3>
 
                 <p>Visitor</p>
               </div>

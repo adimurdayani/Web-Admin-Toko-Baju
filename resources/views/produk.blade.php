@@ -39,7 +39,6 @@
                   <th style="width: 30%" class="text-center">Gambar</th>
                   <th>Nama</th>
                   <th>Harga</th>
-                  <th>Views</th>
                   <th>Tanggal Update</th>
                   <th>Aksi</th>
                 </tr>
@@ -52,11 +51,6 @@
                       <td class="text-center"><img src="{{ asset('storage/produk/'.$d->image) }}" alt="" width="30%" class="img-thumbnail"></td>
                       <td>{{ $d->name }}</td>
                       <td>Rp.{{ number_format($d->harga) }}</td>
-                      <td>
-                        <div class="badge  badge-success">
-                          {{ $d->views }} - <i class="fa fa-eye"></i> 
-                        </div>
-                      </td>
                       <td>{{ $d->updated_at }}</td>
                       <td>
                         <a href="#" data-id="{{ $d->id }}" class="btn btn-warning mb-1" data-target="#edit-modal{{ $d->id }}" 

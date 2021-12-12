@@ -14,7 +14,7 @@ class DaftarTokoController extends Controller
         $user = User::where('user_id', 'seller')->get();
         $id =  Auth::user()->id;
         $register = User::where('user_id', 'user')->count();
-        $transaksi = Transaksi::where('user_id', $id)->count();
+        $transaksi = Transaksi::where('toko_id', $id)->count();
         $user->makeHidden('user_id');
         return view('daftartoko', compact('user', 'register', 'transaksi'));
     }
