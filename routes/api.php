@@ -31,3 +31,5 @@ Route::post('checkout/batal/{id}', 'Api\TransaksiController@batal');
 Route::post('checkout/upload/{id}', 'Api\TransaksiController@upload');
 Route::post('push', 'Api\TransaksiController@pushNotif');
 Route::get('user/{id}', 'Api\UserController@index');
+Route::post('user/ubahpassword/{id}', 'Api\UserController@ubahpassword');
+Route::post('user/ubahprofile/{id}', 'Api\UserController@ubahprofil');

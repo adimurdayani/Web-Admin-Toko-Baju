@@ -20,14 +20,15 @@ class UserController extends Controller
             'user' => $user
         ]);
     }
-    public function Login(Request $request){
+    public function Login(Request $request)
+    {
 
         $validasi = Validator::make($request->all(), [
             'email' => 'required',
             'password' => 'required|min:6'
         ]);
 
-        if($validasi->fails()){
+        if ($validasi->fails()) {
             $val = $validasi->errors()->all();
             return $this->error($val[0]);
         }
@@ -40,13 +41,13 @@ class UserController extends Controller
         if (!$user) {
             return $this->error('Login gagal');
         }
-        
+
         $validpassowrd = Hash::check($password, $user->password);
-        
+
         if (!$validpassowrd) {
             return $this->error('Login gagal');
         }
-        
+
         $user->update([
             'fcm' => $request->fcm
         ]);
@@ -55,7 +56,6 @@ class UserController extends Controller
             'data' => $user,
             'message' => "Login sukses"
         ]);
-        
     }
 
     public function register(Request $request)
@@ -67,11 +67,11 @@ class UserController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        if($validasi->fails()){
+        if ($validasi->fails()) {
             $val = $validasi->errors()->all();
             return $this->error($val[0]);
         }
-        
+
         $name = $request->input('name');
         $email = $request->input('email');
         $phone = $request->input('phone');
@@ -91,6 +91,58 @@ class UserController extends Controller
             'success' => 1,
             'data' => $user,
             'message' => "Login sukses"
+        ]);
+    }
+
+    public function ubahpassword(Request $request, $id)
+    {
+        $validasi = Validator::make($request->all(), [
+            'password' => 'required|min:6'
+        ]);
+
+        if ($validasi->fails()) {
+            $val = $validasi->errors()->all();
+            return $this->error($val[0]);
+        }
+
+        $password = Hash::make($request->input('password'));
+
+        User::where('id', $id)->update([
+            'password' => $password
+        ]);
+
+        return response()->json([
+            'success' => 1,
+            'message' => "Ubah password sukses"
+        ]);
+    }
+
+    public function ubahprofil(Request $request, $id)
+    {
+        $validasi = Validator::make($request->all(), [
+            'nama' => 'required',
+            'email' => 'required|unique:costumers',
+            'phone' => 'required|unique:costumers'
+        ]);
+
+        if ($validasi->fails()) {
+            $val = $validasi->errors()->all();
+            return $this->error($val[0]);
+        }
+
+        $name = $request->input('nama');
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+
+        User::where('id', $id)->update([
+            'nama' => $name,
+            'email' => $email,
+            'phone' => $phone
+        ]);
+
+        return response()->json([
+            'success' => 1,
+            'message' => "Ubah profile sukses"
         ]);
     }
 
