@@ -97,6 +97,7 @@
           <div class="modal-body">
 
             <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+            <input type="hidden" name="nama_toko" value="{{ Auth::user()->nama_toko }}">
 
             <div class="form-group">
               <label>Nama</label>
@@ -231,6 +232,7 @@
           <div class="modal-body">
 
             <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+            <input type="hidden" name="nama_toko" value="{{ Auth::user()->nama_toko }}">
 
             <div class="form-group">
               <label>Nama</label>
