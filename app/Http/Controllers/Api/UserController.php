@@ -133,17 +133,42 @@ class UserController extends Controller
         $name = $request->input('nama');
         $email = $request->input('email');
         $phone = $request->input('phone');
+        $alamat = $request->input('alamat');
 
         User::where('id', $id)->update([
             'nama' => $name,
             'email' => $email,
-            'phone' => $phone
+            'phone' => $phone,
+            'alamat' => $alamat
         ]);
 
         return response()->json([
             'success' => 1,
             'message' => "Ubah profile sukses"
         ]);
+    }
+
+    public function upload_image(Request $request, $id)
+    {
+        $user = User::where('id', $id)->first();
+        $file = '';
+        if ($request->image->getClientOriginalName()) {
+            $file = str_replace(' ', '', $request->image->getClientOriginalName());
+            $fileName  = date('mYdHs') . rand(1, 999) . '-' . $file;
+            $request->image->storeAs('public/logo_toko', $fileName);
+
+            $user->update([
+                'image' => $fileName
+            ]);
+
+            return response()->json([
+                'success' => 1,
+                'message' => "Berhasil upload gambar",
+                'image' => $fileName
+            ]);
+        } else {
+            return $this->error('gagal memuat data');
+        }
     }
 
     public function error($pesan)

@@ -23,10 +23,10 @@ class TransaksiController extends Controller
             'total_transfer' => 'required',
             'bank' => 'required',
             'phone' => 'required',
-            'toko_id' => 'required'            
+            'toko_id' => 'required'
         ]);
 
-        if($validasi->fails()){
+        if ($validasi->fails()) {
             $val = $validasi->errors()->all();
             return $this->error($val[0]);
         }
@@ -66,50 +66,47 @@ class TransaksiController extends Controller
                 'message' => "Transaksi sukses",
                 'transaksi' => collect($transaksi)
             ]);
-
-        }else{
+        } else {
             DB::rollBack();
             $this->error('Transaksi gagal');
         }
-
     }
 
     public function history($id)
     {
-        $gettransaksis = Transaksi::with(['user'])->whereHas('user', function($query) use ($id){
+        $gettransaksis = Transaksi::with(['user'])->whereHas('user', function ($query) use ($id) {
             $query->whereId($id);
         })->orderBy("id", "desc")->get();
-        
+
         foreach ($gettransaksis as $transaksi) {
-            
+
             $details = $transaksi->details;
 
             foreach ($details as $detail) {
                 $detail->produk;
             }
         }
-        
+
         if (!empty($gettransaksis)) {
             return response()->json([
                 'success' => 1,
                 'message' => "Transaksi sukses",
                 'transaksis' => collect($gettransaksis)
             ]);
-
-        }else{
+        } else {
             $this->error('Transaksi gagal');
         }
     }
 
     public function batal($id)
     {
-        $transaksi  = Transaksi::with(['details.produk','user'])->where('id', $id)->first();
+        $transaksi  = Transaksi::with(['details.produk', 'user'])->where('id', $id)->first();
         if ($transaksi) {
             $transaksi->update([
                 'status' => "BATAL"
             ]);
 
-            $this->pushNotif("Transaksi dibatalkan", "Transaksi produk ".$transaksi->details[0]->produk->name.", berhasil dibatalkan",  $transaksi->user->fcm);
+            $this->pushNotif("Transaksi dibatalkan", "Transaksi produk " . $transaksi->details[0]->produk->name . ", berhasil dibatalkan",  $transaksi->user->fcm);
 
             return response()->json([
                 'success' => 1,
@@ -120,7 +117,8 @@ class TransaksiController extends Controller
         return $this->error('gagal memuat transaksi');
     }
 
-    public function pushNotif($title, $message, $mfcm) {
+    public function pushNotif($title, $message, $mfcm)
+    {
 
         $mData = [
             'title' => $title,
@@ -166,28 +164,28 @@ class TransaksiController extends Controller
     public function upload(Request $request, $id)
     {
 
-        $transaksi  = Transaksi::with(['details.produk','user'])->where('id', $id)->first();
+        $transaksi  = Transaksi::with(['details.produk', 'user'])->where('id', $id)->first();
         if ($transaksi) {
 
             $file = '';
             if ($request->image->getClientOriginalName()) {
-                $file = str_replace(' ', '',$request->image->getClientOriginalName());
-                $fileName  = date('mYdHs').rand(1,999).'-'.$file;
+                $file = str_replace(' ', '', $request->image->getClientOriginalName());
+                $fileName  = date('mYdHs') . rand(1, 999) . '-' . $file;
                 $request->image->storeAs('public/transfer', $fileName);
-                
+
                 $transaksi->update([
                     'status' => "DIBAYAR",
                     'bukti_transfer' => $fileName
                 ]);
 
-                $this->pushNotif("Transaksi dibayar", "Transaksi produk ".$transaksi->details[0]->produk->name.", berhasil dibayar",  $transaksi->user->fcm);
+                $this->pushNotif("Transaksi dibayar", "Transaksi produk " . $transaksi->details[0]->produk->name . ", berhasil dibayar",  $transaksi->user->fcm);
 
                 return response()->json([
                     'success' => 1,
                     'message' => "Berhasil upload gambar",
-                    'imasge' => $fileName
+                    'image' => $fileName
                 ]);
-            }else{
+            } else {
                 return $this->error('gagal memuat data');
             }
         }
