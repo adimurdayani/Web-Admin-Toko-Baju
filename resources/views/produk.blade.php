@@ -336,7 +336,7 @@
 @push('after-scripts')
 
 <script>
-    @if($errors - > any())
+    @if($errors -> any())
     $('#add-modal').modal('show')
     @endif
     $(function() {
